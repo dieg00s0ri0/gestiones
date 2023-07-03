@@ -4,5 +4,7 @@ $(document).on("click", "#btnmodalfoto", function () {
     var id = $(this).data("id");
     var tipo = $(this).data("tipo");
     $("#idm").val(id);
-    $("#tipom").val(tipo);
+    var labeltipo = document.getElementById("tipom");
+    labeltipo.textContent = tipo;
+    
 })

@@ -1,5 +1,5 @@
 <!-- *************************INICIO FOOTER***********************************************************************-->
-<nav class="navbar sticky-bottom navbar-expand-lg">
+<nav class="navbar sticky-bottom navbar-expand-lg" style="margin-top: -2%;">
     <span class="navbar-text" style="font-size:12px;font-weigth:normal;color: #7a7a7a;">
         Implementta ©<br>
         Estrategas de México <i class="far fa-registered"></i><br>

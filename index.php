@@ -40,7 +40,7 @@ require "include/cnx.php";
       margin-top: -1%;
       margin-bottom: 0%;
       padding-top: 0px;
-      font-size: 12px;
+      font-size: 10px;
     }
 
     .contenedor {
@@ -58,8 +58,11 @@ require "include/cnx.php";
       color: white !important;
       /* transform: translateY(-10px); */
     }
+    .buttonP{
+      font-size: 10px !important;
+    }
   </style>
-  <br>
+  
   <?php require "include/nav.php"; ?>
   <!--*************************************NAVBAR*************************************************************-->
 </head>
@@ -87,20 +90,20 @@ require "include/cnx.php";
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="datos-tab" data-toggle="tab" href="#datos" role="tab" aria-controls="datos" aria-selected="true">Datos Generales</a>
+        <a class="nav-link" id="datos-tab" data-toggle="tab" href="#datos" role="tab" aria-controls="datos" aria-selected="true">Datos Generales</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="fotos-tab" data-toggle="tab" href="#fotos" role="tab" aria-controls="fotos" aria-selected="false">Fotos</a>
+        <a class="nav-link active" id="fotos-tab" data-toggle="tab" href="#fotos" role="tab" aria-controls="fotos" aria-selected="false">Fotos</a>
       </li>
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <div class="tab-pane active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
+      <div class="tab-pane" id="datos" role="tabpanel" aria-labelledby="datos-tab">
       <?php require "datos_gestor.php"; ?>
       </div>
-      <div class="tab-pane" id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
+      <div class="tab-pane active" id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
         <?php require "fotos.php"; ?>
       </div>
 
@@ -123,7 +126,8 @@ require "include/cnx.php";
 </script>
 <script src="scripts/preview_foto.js"></script>
 <script src="scripts/modalFoto.js"></script>
-<script src="scripts/validarExtF.js"></script>
+<script src="scripts/validarExtF_preview.js"></script>
+<!-- <script src="scripts/modalpreviewfoto.js"></script> -->
 
 
 

@@ -1,4 +1,4 @@
- <nav class="navbar navbar-expand-lg navbar-light">
+ <nav class="navbar navbar-expand-lg navbar-light" style="margin-bottom: -2%;">
     <a href="#"><img src="public/img/logoImplementtaHorizontal.png" width="250" height="82" alt=""></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
