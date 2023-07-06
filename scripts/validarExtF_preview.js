@@ -40,3 +40,45 @@ function validarExtF() {
     return false;
   }
 }
+function validarExtFAgregar() {
+  var archivoInput = document.getElementById("Agregarfoto");
+  var files = document.getElementById("Agregarfoto").files;
+  var zero = document.getElementsByName("Agregarfoto");
+  var archivoRuta = archivoInput.value;
+  var extPermitidas = /(.png|.jpg|.img|.jpeg)$/i;
+  // igualo una valiable al componente que tiene ese id
+  let imgpreviewAgregar = document.getElementById("Agregarimgpreview");
+
+  if (!extPermitidas.exec(archivoRuta)) {
+    // mando un vacio a ese componente
+    //mensaje de error
+    imgpreviewAgregar.innerHTML="";
+    Swal.fire({
+      title: "¡Error!",
+      text: "solo se admiten archivos de tipo imagen",
+      icon: "error",
+      showConfirmButton: true,
+    });
+    //mando un vacio al componente que tiene esta variable
+    archivoInput.value = "";
+    return false;
+  } else {
+    //en caso contrario que si es una imagen previsualizo la imagen
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = function () {
+        
+        imagen = document.createElement("img");
+        imagen.src = reader.result;
+        imagen.style.width="250px";
+        // si tiene una imagen cargarada mando un vacio para que se quite
+        imgpreviewAgregar.innerHTML="";
+        imgpreviewAgregar.append(imagen);
+      };
+    
+  }
+  if (zero.length == 0) {
+    alert("selecciones un archivo");
+    return false;
+  }
+}

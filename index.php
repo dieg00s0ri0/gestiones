@@ -1,7 +1,45 @@
 <?php
-
+$bd=$_GET['bd'];
+$rol=$_GET['rol'];
+$registro=$_GET['registro'];
+$cuenta=$_GET['cuenta'];
 require "include/cnx.php";
+$cnx = conexion($bd);
+//obtengo el id del rol
 
+$sql_IdRol= "select a.Id from AspNetRoles as a where a.Name='$rol'";
+$cnx_sql_IdRol = sqlsrv_query($cnx, $sql_IdRol);
+$IdRol = sqlsrv_fetch_array($cnx_sql_IdRol);
+$rolId=$IdRol['Id'];
+
+
+
+$tabla='';
+$idRegistro='';
+//validamos que tabla se ocupara
+if($rol=='Gestor'){
+  $tabla='RegistroGestorprueba';
+  $idRegistro='IdRegistroGestor';
+}
+if($rol=='Abogado'){
+  $tabla='RegistroAbogadoprueba';
+  $idRegistro='IdRegistroAbogado';
+}
+if($rol=='Cortes'){
+  $tabla='RegistroReductoresprueba';
+  $idRegistro='IdRegistroReductores';
+}
+if($rol=='Carta'){
+  $tabla='RegistroCartaInvitacionprueba';
+  $idRegistro='IdRegistroCartaInvitacion';
+}
+//consulta datos de la gestion
+$sql_datos= "SELECT convert(varchar,a.FechaCaptura,21) AS  Fecha,a.IdTarea,DescripcionTarea,a.IdAspUser,c.Nombre FROM $tabla as a inner join CatalogoTareas as b on a.IdTarea=b.IdTarea
+inner join AspNetUsers as c on a.IdAspUser=c.id
+WHERE a.$idRegistro='$registro'";
+$cnx_sql_datos = sqlsrv_query($cnx, $sql_datos);
+$datos = sqlsrv_fetch_array($cnx_sql_datos);
+$IdAspUser=$datos['IdAspUser'];
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +57,7 @@ require "include/cnx.php";
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css" id="theme-styles">
+  <script src="sweetalert/alertas.js"></script>
   <!--<script src="../js/ajaxDeter.js"></script>-->
 
   <style>
@@ -40,6 +79,9 @@ require "include/cnx.php";
       margin-top: -1%;
       margin-bottom: 0%;
       padding-top: 0px;
+      
+    }
+    table,td,tr{
       font-size: 10px;
     }
 
@@ -58,8 +100,8 @@ require "include/cnx.php";
       color: white !important;
       /* transform: translateY(-10px); */
     }
-    .buttonP{
-      font-size: 10px !important;
+    .texto{
+      font-size: 18px !important;
     }
   </style>
   
@@ -68,7 +110,11 @@ require "include/cnx.php";
 </head>
 
 <body>
-
+<?php if (isset($_GET['fotoactualizado'])) { ?>
+    <script>
+      compilado('Datos Actualizados Correctamente')
+    </script>;
+  <?php } ?>
   <hr>
   <div class="contenedor">
 
@@ -77,33 +123,33 @@ require "include/cnx.php";
     </div>
     <div class="row" style="text-align: center;">
       <div class="col-md-4">
-        <h6 style="text-shadow: 0px 0px 2px #717171;"><img " src=" https://img.icons8.com/fluency/24/database.png" /> Plaza:</h6>
+        <h6 style="text-shadow: 0px 0px 2px #717171;"><img " src=" https://img.icons8.com/fluency/24/database.png" /> Plaza: <?php echo $bd ?></h6>
       </div>
       <div class="col-md-4">
-        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/businessman.png" alt=""> Rol: Gestor</h6>
+        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/businessman.png" alt=""> Rol: <?php echo $rol ?></h6>
       </div>
       <div class="col-md-4">
-        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/gender-neutral-user.png" alt=""> Cuenta: 1234</h6>
+        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/gender-neutral-user.png" alt=""> Cuenta: <?php echo $cuenta ?></h6>
       </div>
     </div>
 
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link" id="datos-tab" data-toggle="tab" href="#datos" role="tab" aria-controls="datos" aria-selected="true">Datos Generales</a>
+        <a class="nav-link active" id="datos-tab" data-toggle="tab" href="#datos" role="tab" aria-controls="datos" aria-selected="true">Gestión</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" id="fotos-tab" data-toggle="tab" href="#fotos" role="tab" aria-controls="fotos" aria-selected="false">Fotos</a>
+        <a class="nav-link " id="fotos-tab" data-toggle="tab" href="#fotos" role="tab" aria-controls="fotos" aria-selected="false">Fotos</a>
       </li>
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <div class="tab-pane" id="datos" role="tabpanel" aria-labelledby="datos-tab">
+      <div class="tab-pane active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
       <?php require "datos_gestor.php"; ?>
       </div>
-      <div class="tab-pane active" id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
+      <div class="tab-pane " id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
         <?php require "fotos.php"; ?>
       </div>
 
