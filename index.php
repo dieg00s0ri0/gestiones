@@ -6,40 +6,51 @@ $cuenta=$_GET['cuenta'];
 require "include/cnx.php";
 $cnx = conexion($bd);
 //obtengo el id del rol
-
-$sql_IdRol= "select a.Id from AspNetRoles as a where a.Name='$rol'";
-$cnx_sql_IdRol = sqlsrv_query($cnx, $sql_IdRol);
-$IdRol = sqlsrv_fetch_array($cnx_sql_IdRol);
-$rolId=$IdRol['Id'];
-
-
-
 $tabla='';
 $idRegistro='';
-//validamos que tabla se ocupara
+
+if($rol=='Carta'){
+  $tabla='registroCartaInvitacionprueba';
+  $idRegistro='idRegistroCartaInvitacion';
+
+  $rolId=0;
+  $gestion='Carta Invitación';
+}
+else{
+  $sql_IdRol= "select a.Id from AspNetRoles as a where a.Name='$rol'";
+  $cnx_sql_IdRol = sqlsrv_query($cnx, $sql_IdRol);
+  $IdRol = sqlsrv_fetch_array($cnx_sql_IdRol);
+  $rolId=$IdRol['Id'];
+  //validamos que tabla se ocupara
 if($rol=='Gestor'){
   $tabla='RegistroGestorprueba';
   $idRegistro='IdRegistroGestor';
+  $gestion='Registro Gestore';
 }
 if($rol=='Abogado'){
   $tabla='RegistroAbogadoprueba';
   $idRegistro='IdRegistroAbogado';
+  $gestion='Registro Abogado';
 }
 if($rol=='Cortes'){
   $tabla='RegistroReductoresprueba';
   $idRegistro='IdRegistroReductores';
+  $gestion='Registro Corte';
 }
-if($rol=='Carta'){
-  $tabla='RegistroCartaInvitacionprueba';
-  $idRegistro='IdRegistroCartaInvitacion';
 }
+
+
 //consulta datos de la gestion
-$sql_datos= "SELECT convert(varchar,a.FechaCaptura,21) AS  Fecha,a.IdTarea,DescripcionTarea,a.IdAspUser,c.Nombre FROM $tabla as a inner join CatalogoTareas as b on a.IdTarea=b.IdTarea
+$sql_datos= "SELECT convert(varchar,a.FechaCaptura,21) AS  Fecha,a.IdTarea,DescripcionTarea,a.IdAspUser, c.Nombre,e.Name FROM $tabla as a 
+inner join CatalogoTareas as b on a.IdTarea=b.IdTarea
 inner join AspNetUsers as c on a.IdAspUser=c.id
+inner join AspNetUserRoles as d on c.Id=d.UserId
+inner join AspNetRoles as e on d.RoleId=e.Id
 WHERE a.$idRegistro='$registro'";
 $cnx_sql_datos = sqlsrv_query($cnx, $sql_datos);
 $datos = sqlsrv_fetch_array($cnx_sql_datos);
 $IdAspUser=$datos['IdAspUser'];
+$rolSelect=$datos['Name'];
 ?>
 
 <!DOCTYPE html>
@@ -103,6 +114,23 @@ $IdAspUser=$datos['IdAspUser'];
     .texto{
       font-size: 18px !important;
     }
+    select {
+    border:1px solid #999;
+    background-color:#FFFFFF;
+  
+}
+optgroup {
+    background-color:#000000;
+    color:#FFFFFF;
+    background-image:url(flecha.png);
+    background-repeat:no-repeat;
+    background-position:right top;
+}
+option {
+    background-color:#FFFFFF;
+    color: #000000;
+
+}
   </style>
   
   <?php require "include/nav.php"; ?>
@@ -110,9 +138,14 @@ $IdAspUser=$datos['IdAspUser'];
 </head>
 
 <body>
-<?php if (isset($_GET['fotoactualizado'])) { ?>
+<?php if (isset($_GET['UpdateGestion'])) { ?>
     <script>
-      compilado('Datos Actualizados Correctamente')
+      succes('Gestión Actualizada Correctamente')
+    </script>;
+  <?php } ?>
+<?php if (isset($_GET['ErrorUpdateGestion'])) { ?>
+    <script>
+      error('Error al actualizar, verifique sus datos y si el problema persiste comuniquese con soporte')
     </script>;
   <?php } ?>
   <hr>
@@ -126,7 +159,7 @@ $IdAspUser=$datos['IdAspUser'];
         <h6 style="text-shadow: 0px 0px 2px #717171;"><img " src=" https://img.icons8.com/fluency/24/database.png" /> Plaza: <?php echo $bd ?></h6>
       </div>
       <div class="col-md-4">
-        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/businessman.png" alt=""> Rol: <?php echo $rol ?></h6>
+        <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/businessman.png" alt=""> Gestión: <?php echo $gestion ?></h6>
       </div>
       <div class="col-md-4">
         <h6 style="text-shadow: 0px 0px 2px #717171;"><img src="https://img.icons8.com/fluency/24/gender-neutral-user.png" alt=""> Cuenta: <?php echo $cuenta ?></h6>
@@ -172,8 +205,9 @@ $IdAspUser=$datos['IdAspUser'];
 </script>
 <script src="scripts/preview_foto.js"></script>
 <script src="scripts/modalFoto.js"></script>
+<script src="scripts/modalFotoDelete.js"></script>
 <script src="scripts/validarExtF_preview.js"></script>
-<!-- <script src="scripts/modalpreviewfoto.js"></script> -->
+<script src="scripts/modalpreviewfoto.js"></script>
 
 
 

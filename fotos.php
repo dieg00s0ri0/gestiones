@@ -2,7 +2,7 @@
 
 $sql_fotos = "select f.*,convert(varchar,f.FechaCaptura,21) AS  Fecha,c.DescripcionTarea from $tabla a
 inner join [dbo].Registrofotomovilprueba f on a.cuenta=f.cuenta 
-inner join CatalogoTareas as c on a.idTarea=c.IdTarea
+inner join CatalogoTareas as c on f.idTarea=c.IdTarea
 where convert(date,a.fechacaptura)=convert(date,f.fechacaptura)
 and a.$idRegistro='$registro' and f.IdAspUser='$IdAspUser'";
 $cnx_sql_fotos = sqlsrv_query($cnx, $sql_fotos);
@@ -38,15 +38,15 @@ $contador = 0;
                         <td class="table-light"><?php echo $contador += 1 ?></td>
                         <td class="table-light"><?php echo $fotos['nombreFoto'] ?></td>
                         <td class="table-light"><?php echo $fotos['Fecha'] ?></td>
-                        <td class="table-light"><?php echo $fotos['tipo'] ?></td>
-                        <td class="table-light"><?php echo $fotos['DescripcionTarea'] ?></td>
-                        <td class="table-light"><?php echo $datos['Nombre'] ?></td>
+                        <td class="table-light"><?php echo utf8_encode($fotos['tipo']) ?></td>
+                        <td class="table-light"><?php echo utf8_encode($fotos['DescripcionTarea']) ?></td>
+                        <td class="table-light"><?php echo utf8_encode($datos['Nombre']) ?></td>
                         <td class="table-light">
                             <input type="hidden" name="url" id="ur[<?php echo $contador ?>]" value="<?php echo $fotos['urlImagen'] ?>">
                             <button class="btn" type="submit" onclick="view(<?php echo $contador ?>)"><img src="https://img.icons8.com/fluency/20/image.png" /></button>
-                            <button class="btn" type="submit"><img src="https://img.icons8.com/fluency/20/delete-trash.png" /></button>
+                            <button class="btn" type="submit" data-toggle="modal" data-target="#modalfotoDelete" id="btnmodalfotoDelete" title="Eliminar foto" data-iddelete="<?php echo $fotos['idRegistroFoto'] ?>"><img src="https://img.icons8.com/fluency/20/delete-trash.png" /></button>
                             <button class="btn" type="button" data-toggle="modal" data-target="#modalfoto" id="btnmodalfoto" title="Actualizar foto" data-id="<?php echo $fotos['idRegistroFoto'] ?>" data-tipo="<?php echo $fotos['tipo'] ?>">
-                                <img src="https://img.icons8.com/fluency/20/edit-text-file.png" /></button>
+                                <img src="https://img.icons8.com/fluency/20/edit-text-file.png"/></button>
 
                         </td>
                     </tr>
@@ -80,6 +80,30 @@ $contador = 0;
                     <input class="form-control form-control-sm" name="foto" id="foto" type="file" onchange="return validarExtF()" accept=".png, .img,.jpg,.jpeg" required>
                     <br>
                     <div style="margin-left: 100px;" id="imgpreview" class="styleImage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> Actualizar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal Delete -->
+<div id="modalfotoDelete" class="modal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <form action="crud/DeleteFoto.php" method="POST">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Eliminacion de Imagén</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="iddelete" name="id">
+                    <input type="hidden" id="iddelete" name="id">
+                    <label for="formFileSm" class="form-label">Esta Seguro de Eliminar Esta Foto?</label>
+                    <div id="imgpreviewm"></div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>

@@ -7,7 +7,7 @@ function error(msj){
         showConfirmButton: true
     }))
 }
-function compilado(msj){
+function succes(msj){
     return (
     Swal.fire({
         title: 'Exito!',
