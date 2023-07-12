@@ -17,8 +17,8 @@
         <br><br><br><br><br><br><br><br>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-        <a href="../deterTolucaA"><img src="../deterTolucaA/public/img/logoImplementta.png" width="155" height="150" alt=""></a>
-        <a href="http://estrategas.mx/" target="_blank"><img src="../deterTolucaA/public/img/logoTop.png" width="200" height="85" alt=""></a>
+        <a href="#"><img src="public/img/logoImplementta.png" width="155" height="150" alt=""></a>
+        <a href="http://estrategas.mx/" target="_blank"><img src="public/img/logoTop.png" width="200" height="85" alt=""></a>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </form>
 </nav>

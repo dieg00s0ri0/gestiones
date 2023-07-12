@@ -6,9 +6,9 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="nav-item nav-link" href="#"> Inicio </a>
+        <!-- <a class="nav-item nav-link" href="#"> Inicio </a>
 
-        <a class="nav-item nav-link" href="https://gallant-driscoll.198-71-62-113.plesk.page/implementta/modulos/Administrador/logout.php"> Salir <i class="fas fa-sign-out-alt"></i></a>
+        <a class="nav-item nav-link" href="https://gallant-driscoll.198-71-62-113.plesk.page/implementta/modulos/Administrador/logout.php"> Salir <i class="fas fa-sign-out-alt"></i></a> -->
 
       </ul>
 

@@ -1,47 +1,49 @@
 <?php
-$bd=$_GET['bd'];
-$rol=$_GET['rol'];
-$registro=$_GET['registro'];
-$cuenta=$_GET['cuenta'];
+// session_start();
+// if(isset($_SESSION['user'])){
+if (isset($_GET['bd']) and isset($_GET['rol']) and isset($_GET['registro']) and isset($_GET['cuenta'])) {
+$bd = $_GET['bd'];
+$rol = $_GET['rol'];
+$registro = $_GET['registro'];
+$cuenta = $_GET['cuenta'];
 require "include/cnx.php";
 $cnx = conexion($bd);
 //obtengo el id del rol
-$tabla='';
-$idRegistro='';
+$tabla = '';
+$idRegistro = '';
 
-if($rol=='Carta'){
-  $tabla='registroCartaInvitacionprueba';
-  $idRegistro='idRegistroCartaInvitacion';
+if ($rol == 'Carta') {
+  $tabla = 'registroCartaInvitacionprueba';
+  $idRegistro = 'idRegistroCartaInvitacion';
 
-  $rolId=0;
-  $gestion='Carta Invitación';
-}
-else{
-  $sql_IdRol= "select a.Id from AspNetRoles as a where a.Name='$rol'";
+  $rolId = 0;
+  $gestion = 'Carta Invitación';
+} else {
+  $sql_IdRol = "select a.Id from AspNetRoles as a where a.Name='$rol'";
   $cnx_sql_IdRol = sqlsrv_query($cnx, $sql_IdRol);
   $IdRol = sqlsrv_fetch_array($cnx_sql_IdRol);
-  $rolId=$IdRol['Id'];
+  $rolId = $IdRol['Id'];
   //validamos que tabla se ocupara
-if($rol=='Gestor'){
-  $tabla='RegistroGestorprueba';
-  $idRegistro='IdRegistroGestor';
-  $gestion='Registro Gestore';
-}
-if($rol=='Abogado'){
-  $tabla='RegistroAbogadoprueba';
-  $idRegistro='IdRegistroAbogado';
-  $gestion='Registro Abogado';
-}
-if($rol=='Cortes'){
-  $tabla='RegistroReductoresprueba';
-  $idRegistro='IdRegistroReductores';
-  $gestion='Registro Corte';
-}
+  if ($rol == 'Gestor') {
+    $tabla = 'RegistroGestorprueba';
+    $idRegistro = 'IdRegistroGestor';
+    $gestion = 'Registro Gestor';
+  }
+  if ($rol == 'Abogado') {
+    $tabla = 'RegistroAbogadoprueba';
+    $idRegistro = 'IdRegistroAbogado';
+    $gestion = 'Registro Abogado';
+  }
+  if ($rol == 'Cortes') {
+    $tabla = 'RegistroReductoresprueba';
+    $idRegistro = 'IdRegistroReductores';
+    $gestion = 'Registro Corte';
+  }
 }
 
 
 //consulta datos de la gestion
-$sql_datos= "SELECT convert(varchar,a.FechaCaptura,21) AS  Fecha,a.IdTarea,DescripcionTarea,a.IdAspUser, c.Nombre,e.Name FROM $tabla as a 
+$sql_datos = "SELECT convert(varchar,a.FechaCaptura,21) AS  Fecha,a.IdTarea,DescripcionTarea,a.IdAspUser, c.Nombre,e.Name FROM $tabla as a 
 inner join CatalogoTareas as b on a.IdTarea=b.IdTarea
 inner join AspNetUsers as c on a.IdAspUser=c.id
 inner join AspNetUserRoles as d on c.Id=d.UserId
@@ -49,8 +51,8 @@ inner join AspNetRoles as e on d.RoleId=e.Id
 WHERE a.$idRegistro='$registro'";
 $cnx_sql_datos = sqlsrv_query($cnx, $sql_datos);
 $datos = sqlsrv_fetch_array($cnx_sql_datos);
-$IdAspUser=$datos['IdAspUser'];
-$rolSelect=$datos['Name'];
+$IdAspUser = $datos['IdAspUser'];
+$rolSelect = $datos['Name'];
 ?>
 
 <!DOCTYPE html>
@@ -90,9 +92,12 @@ $rolSelect=$datos['Name'];
       margin-top: -1%;
       margin-bottom: 0%;
       padding-top: 0px;
-      
+
     }
-    table,td,tr{
+
+    table,
+    td,
+    tr {
       font-size: 10px;
     }
 
@@ -111,41 +116,88 @@ $rolSelect=$datos['Name'];
       color: white !important;
       /* transform: translateY(-10px); */
     }
-    .texto{
+
+    .texto {
       font-size: 18px !important;
     }
-    select {
-    border:1px solid #999;
-    background-color:#FFFFFF;
-  
-}
-optgroup {
-    background-color:#000000;
-    color:#FFFFFF;
-    background-image:url(flecha.png);
-    background-repeat:no-repeat;
-    background-position:right top;
-}
-option {
-    background-color:#FFFFFF;
-    color: #000000;
 
-}
+    select {
+      border: 1px solid #999;
+      background-color: #FFFFFF;
+
+    }
+
+    optgroup {
+      background-color: #000000;
+      color: #FFFFFF;
+
+      background-repeat: no-repeat;
+      background-position: right top;
+    }
+
+    option {
+      background-color: #FFFFFF;
+      color: #000000;
+
+    }
+
+    .foto_modal {
+      display: block;
+      width: 350px;
+      height: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
-  
+
   <?php require "include/nav.php"; ?>
   <!--*************************************NAVBAR*************************************************************-->
 </head>
 
 <body>
-<?php if (isset($_GET['UpdateGestion'])) { ?>
+  <?php if (isset($_GET['ErrorS3'])) { ?>
+    <script>
+      error('Error al comunicarse con el repositorio, verifique sus datos y si el problema persiste comuniquese con soporte')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['UpdateGestion'])) { ?>
     <script>
       succes('Gestión Actualizada Correctamente')
     </script>;
   <?php } ?>
-<?php if (isset($_GET['ErrorUpdateGestion'])) { ?>
+  <?php if (isset($_GET['ErrorUpdateGestion'])) { ?>
     <script>
       error('Error al actualizar, verifique sus datos y si el problema persiste comuniquese con soporte')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['UpdateFoto'])) { ?>
+    <script>
+      succes('Foto Actualizada Correctamente')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['ErrorUpdateFoto'])) { ?>
+    <script>
+      error('Error al actualizar, verifique sus datos y si el problema persiste comuniquese con soporte')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['InsertFoto'])) { ?>
+    <script>
+      succes('Foto Insertada Correctamente')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['ErrorInsertFoto'])) { ?>
+    <script>
+      error('Error al insertar, verifique sus datos y si el problema persiste comuniquese con soporte')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['DeleteFoto'])) { ?>
+    <script>
+      succes('Foto Eliminada Correctamente')
+    </script>;
+  <?php } ?>
+  <?php if (isset($_GET['ErrorDeleteFoto'])) { ?>
+    <script>
+      error('Error al eliminar, vuelva a intentarlo y si el problema persiste comuniquese con soporte')
     </script>;
   <?php } ?>
   <hr>
@@ -180,7 +232,7 @@ option {
     <!-- Tab panes -->
     <div class="tab-content">
       <div class="tab-pane active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
-      <?php require "datos_gestor.php"; ?>
+        <?php require "datos_gestor.php"; ?>
       </div>
       <div class="tab-pane " id="fotos" role="tabpanel" aria-labelledby="fotos-tab">
         <?php require "fotos.php"; ?>
@@ -204,11 +256,19 @@ option {
   AOS.init();
 </script>
 <script src="scripts/preview_foto.js"></script>
-<script src="scripts/modalFoto.js"></script>
+<script src="scripts/modalFotoUpdate.js"></script>
 <script src="scripts/modalFotoDelete.js"></script>
 <script src="scripts/validarExtF_preview.js"></script>
-<script src="scripts/modalpreviewfoto.js"></script>
+<!-- <script src="scripts/modalpreviewfoto.js"></script> -->
 
 
 
 </html>
+<?php
+} else {
+    echo '<meta http-equiv="refresh" content="0,url=./">';
+}
+// } else {
+//     echo '<meta http-equiv="refresh" content="0,url=./">';
+// }
+?>
